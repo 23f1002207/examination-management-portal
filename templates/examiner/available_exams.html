@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Available Examinations{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Available Examinations</h1>
+<p class="text-muted">Examinations that do not yet have an examiner.</p>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Type</th><th>Duration</th><th>Marks</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exams %}
+  <tr><td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.course_code }} - {{ e.course.name }}</td><td>{{ e.type }}</td>
+    <td>{{ e.duration }} min</td><td>{{ e.marks }}</td>
+    <td>{% if e.id in pending_ids %}<span class="badge bg-warning text-dark">Request pending</span>
+      {% else %}<form class="inline" method="post" action="{{ url_for('examiner.submit_request', exam_id=e.id) }}"><button class="btn btn-sm btn-primary">Request</button></form>{% endif %}</td></tr>
+  {% else %}<tr><td colspan="7" class="text-center text-muted">No examinations available.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

@@ -1,0 +1,4 @@
+body { min-height: 100vh; }
+.stat-card .display-6 { font-weight: 600; }
+th { white-space: nowrap; }
+form.inline { display: inline; }

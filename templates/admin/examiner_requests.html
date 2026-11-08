@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Examiner Requests{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Examiner Requests</h1>
+<ul class="nav nav-pills mb-3">
+  {% for label, value in [('All', ''), ('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected')] %}
+  <li class="nav-item"><a class="nav-link {% if status == value %}active{% endif %}" href="{{ url_for('admin.examiner_requests', status=value, q=q) }}">{{ label }}</a></li>
+  {% endfor %}
+</ul>
+<form class="row g-2 mb-3" method="get">
+  <input type="hidden" name="status" value="{{ status }}">
+  <div class="col-auto"><input class="form-control" name="q" value="{{ q }}" placeholder="Examiner or examination name"></div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Search</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>#</th><th>Examiner</th><th>Examination</th><th>Requested</th><th>Status</th><th>Decided</th><th></th></tr></thead>
+  <tbody>
+  {% for r in reqs %}
+  <tr><td>{{ r.id }}</td>
+    <td><a href="{{ url_for('admin.examiner_details', examiner_id=r.examiner_id) }}">{{ r.examiner.name }}</a></td>
+    <td><a href="{{ url_for('admin.exam_details', exam_id=r.exam_id) }}">{{ r.exam.name }}</a></td>
+    <td>{{ r.request_date.strftime('%Y-%m-%d %H:%M') if r.request_date }}</td>
+    <td>{{ r.status }}</td>
+    <td>{{ r.decision_date.strftime('%Y-%m-%d %H:%M') if r.decision_date }}</td>
+    <td>{% if r.status == 'Pending' %}
+      <form class="inline" method="post" action="{{ url_for('admin.request_decide', req_id=r.id, action='approve') }}"><button class="btn btn-sm btn-success">Approve</button></form>
+      <form class="inline" method="post" action="{{ url_for('admin.request_decide', req_id=r.id, action='reject') }}"><button class="btn btn-sm btn-danger">Reject</button></form>
+    {% endif %}</td></tr>
+  {% else %}<tr><td colspan="7" class="text-center text-muted">No requests found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

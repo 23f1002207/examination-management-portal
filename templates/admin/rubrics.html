@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Rubrics{% endblock %}
+{% block content %}
+{% if exam is none %}
+<h1 class="h3 mb-3">Rubrics</h1>
+<table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Examination</th><th>Max marks</th><th>Weightage used</th><th>Marks used</th><th></th></tr></thead>
+  <tbody>
+  {% for e, w, m in rows %}
+  <tr><td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.marks }}</td><td>{{ w|round(2) }}%</td><td>{{ m|round(2) }}</td>
+    <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.exam_rubrics', exam_id=e.id) }}">Manage</a></td></tr>
+  {% else %}<tr><td colspan="6" class="text-center text-muted">No examinations.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h1 class="h3">Rubrics: {{ exam.name }} <small class="text-muted">(max {{ exam.marks }} marks)</small></h1>
+<p>
+  <span class="badge {{ 'bg-success' if total_w|round(2) == 100 else 'bg-warning text-dark' }}">Weightage {{ total_w|round(2) }}% / 100%</span>
+  <span class="badge {{ 'bg-success' if total_m|round(2) == exam.marks else 'bg-warning text-dark' }}">Marks {{ total_m|round(2) }} / {{ exam.marks }}</span>
+  <a class="btn btn-link btn-sm" href="{{ url_for('admin.rubrics') }}">All examinations</a>
+</p>
+<table class="table table-striped bg-white">
+  <thead><tr><th>Criterion</th><th>Weightage %</th><th>Max marks</th><th>Description</th><th></th></tr></thead>
+  <tbody>
+  {% for r in items %}
+  <tr><td>{{ r.name }}</td><td>{{ r.weightage }}</td><td>{{ r.max_marks }}</td><td>{{ r.description }}</td>
+    <td><a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.rubric_edit', rubric_id=r.id) }}">Edit</a>
+      <form class="inline" method="post" action="{{ url_for('admin.rubric_delete', rubric_id=r.id) }}"><button class="btn btn-sm btn-outline-danger">Remove</button></form></td></tr>
+  {% else %}<tr><td colspan="5" class="text-center text-muted">No criteria yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<div class="card shadow-sm"><div class="card-body">
+  <h2 class="h5">Add criterion</h2>
+  <form method="post" class="row g-2">
+    <div class="col-md-3"><input class="form-control" name="name" placeholder="Criterion name" required></div>
+    <div class="col-md-2"><input class="form-control" type="number" step="any" min="0" name="weightage" placeholder="Weightage %" required></div>
+    <div class="col-md-2"><input class="form-control" type="number" step="any" min="0" name="max_marks" placeholder="Max marks" required></div>
+    <div class="col-md-3"><input class="form-control" name="description" placeholder="Evaluation instructions"></div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
+  </form>
+</div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Welcome, {{ me.name }}</h1>
+<div class="row g-3">
+  <div class="col-md-4"><a class="text-decoration-none" href="{{ url_for('student.examinations', view='available') }}"><div class="card stat-card shadow-sm text-center"><div class="card-body">
+    <div class="display-6">{{ stats['Available Examinations'] }}</div><div class="text-muted">Available Examinations</div></div></div></a></div>
+  <div class="col-md-4"><a class="text-decoration-none" href="{{ url_for('student.examinations', view='completed') }}"><div class="card stat-card shadow-sm text-center"><div class="card-body">
+    <div class="display-6">{{ stats['Completed Examinations'] }}</div><div class="text-muted">Completed Examinations</div></div></div></a></div>
+  <div class="col-md-4"><a class="text-decoration-none" href="{{ url_for('student.examinations', view='pending') }}"><div class="card stat-card shadow-sm text-center"><div class="card-body">
+    <div class="display-6">{{ stats['Not Completed Examinations'] }}</div><div class="text-muted">Not Completed Examinations</div></div></div></a></div>
+</div>
+{% endblock %}

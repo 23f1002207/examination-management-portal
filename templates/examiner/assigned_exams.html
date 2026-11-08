@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Assigned Examinations{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Assigned Examinations</h1>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Type</th><th>Duration</th><th>Marks</th><th>Slot creation</th><th>Slot booking</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for e in exams %}
+  <tr><td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.course_code }}</td><td>{{ e.type }}</td><td>{{ e.duration }} min</td><td>{{ e.marks }}</td>
+    <td>{{ e.slot_creation_start_date }} to {{ e.slot_creation_end_date }}</td>
+    <td>{{ e.slot_booking_start_date }} to {{ e.slot_booking_end_date }}</td><td>{{ e.status }}</td></tr>
+  {% else %}<tr><td colspan="9" class="text-center text-muted">No examinations assigned yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

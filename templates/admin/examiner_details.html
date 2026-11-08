@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Examiner {{ examiner.id }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-body">
+  <h1 class="h4">{{ examiner.name }} <small class="text-muted">(ID {{ examiner.id }})</small></h1>
+  <p><strong>Username:</strong> {{ examiner.user.username }}</p>
+  <p><strong>Contact:</strong> {{ examiner.contact_no }}</p>
+  <p><strong>Department:</strong> {{ examiner.department }}</p>
+  <p><strong>Status:</strong> {{ examiner.status }}</p>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.examiner_edit', examiner_id=examiner.id) }}">Edit</a>
+  <a class="btn btn-link" href="{{ url_for('admin.examiners') }}">Back</a>
+</div></div>
+<h2 class="h5">Assigned examinations</h2>
+<table class="table bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for e in assigned %}
+  <tr><td>{{ e.id }}</td><td><a href="{{ url_for('admin.exam_details', exam_id=e.id) }}">{{ e.name }}</a></td><td>{{ e.course_code }}</td><td>{{ e.status }}</td></tr>
+  {% else %}<tr><td colspan="4" class="text-muted text-center">None.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

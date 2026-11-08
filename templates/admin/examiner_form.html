@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Examiner{% endblock %}
+{% block content %}
+<div class="card shadow-sm col-md-7"><div class="card-body">
+  <h1 class="h4 mb-3">{{ 'Edit' if examiner else 'Add' }} Examiner</h1>
+  <form method="post">
+    <div class="mb-3"><label class="form-label">Name</label>
+      <input class="form-control" name="name" value="{{ examiner.name if examiner else request.form.get('name', '') }}" required></div>
+    <div class="mb-3"><label class="form-label">Contact number</label>
+      <input class="form-control" name="contact_no" value="{{ (examiner.contact_no or '') if examiner else request.form.get('contact_no', '') }}"></div>
+    <div class="mb-3"><label class="form-label">Department</label>
+      <input class="form-control" name="department" value="{{ (examiner.department or '') if examiner else request.form.get('department', '') }}"></div>
+    {% if not examiner %}<p class="text-muted">Username and initial password are generated automatically.</p>{% endif %}
+    <button class="btn btn-primary">{{ 'Save' if examiner else 'Create Examiner' }}</button>
+    <a class="btn btn-link" href="{{ url_for('admin.examiners') }}">Cancel</a>
+  </form>
+</div></div>
+{% endblock %}

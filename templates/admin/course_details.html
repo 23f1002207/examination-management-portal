@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Course {{ course.code }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-body">
+  <h1 class="h4">{{ course.code }} &ndash; {{ course.name }}</h1>
+  <p><strong>Status:</strong> {{ course.status }}</p>
+  <p>{{ course.description or 'No description.' }}</p>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.course_edit', code=course.code) }}">Edit</a>
+  <a class="btn btn-link" href="{{ url_for('admin.courses') }}">Back</a>
+</div></div>
+<h2 class="h5">Examinations in this course</h2>
+<table class="table bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for e in course.exams if e.status != 'Removed' %}
+  <tr><td>{{ e.id }}</td><td><a href="{{ url_for('admin.exam_details', exam_id=e.id) }}">{{ e.name }}</a></td><td>{{ e.type }}</td><td>{{ e.status }}</td></tr>
+  {% else %}<tr><td colspan="4" class="text-muted text-center">None.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

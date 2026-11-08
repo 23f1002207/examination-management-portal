@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h1 class="h3">Students</h1>
+  <a class="btn btn-primary" href="{{ url_for('admin.student_add') }}">Add Student</a></div>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-3"><input class="form-control" name="q" value="{{ q }}" placeholder="Search by ID or name"></div>
+  <div class="col-md-2"><select class="form-select" name="class_name"><option value="">All classes</option>
+    {% for c in classes %}<option {% if c == class_name %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="section"><option value="">All sections</option>
+    {% for s in sections %}<option {% if s == section %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="academic_year"><option value="">All years</option>
+    {% for y in years %}<option {% if y == year %}selected{% endif %}>{{ y }}</option>{% endfor %}</select></div>
+  <div class="col-auto form-check pt-2"><input class="form-check-input" type="checkbox" name="all" value="1" id="all" {% if show_all %}checked{% endif %}>
+    <label class="form-check-label" for="all">Show inactive</label></div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Filter</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Username</th><th>Name</th><th>Class</th><th>Section</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for s in students %}
+  <tr><td>{{ s.id }}</td><td>{{ s.user.username }}</td><td>{{ s.name }}</td><td>{{ s.class_name }}</td><td>{{ s.section }}</td><td>{{ s.academic_year }}</td><td>{{ s.status }}</td>
+    <td>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.student_details', student_id=s.id) }}">View</a>
+      <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.student_edit', student_id=s.id) }}">Edit</a>
+      {% if s.status == 'Active' %}
+      <form class="inline" method="post" action="{{ url_for('admin.student_status', student_id=s.id, action='deactivate') }}"><button class="btn btn-sm btn-outline-danger">Deactivate</button></form>
+      {% else %}
+      <form class="inline" method="post" action="{{ url_for('admin.student_status', student_id=s.id, action='activate') }}"><button class="btn btn-sm btn-outline-success">Activate</button></form>
+      {% endif %}
+    </td></tr>
+  {% else %}<tr><td colspan="8" class="text-center text-muted">No students found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

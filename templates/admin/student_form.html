@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Student{% endblock %}
+{% block content %}
+<div class="card shadow-sm col-md-7"><div class="card-body">
+  <h1 class="h4 mb-3">{{ 'Edit' if student else 'Add' }} Student</h1>
+  <form method="post">
+    <div class="mb-3"><label class="form-label">Name</label>
+      <input class="form-control" name="name" value="{{ student.name if student else request.form.get('name', '') }}" required></div>
+    <div class="row mb-3">
+      <div class="col"><label class="form-label">Class</label>
+        <input class="form-control" name="class_name" value="{{ (student.class_name or '') if student else request.form.get('class_name', '') }}"></div>
+      <div class="col"><label class="form-label">Section</label>
+        <input class="form-control" name="section" value="{{ (student.section or '') if student else request.form.get('section', '') }}"></div>
+      <div class="col"><label class="form-label">Academic year</label>
+        <input class="form-control" name="academic_year" placeholder="2025-26" value="{{ (student.academic_year or '') if student else request.form.get('academic_year', '') }}"></div>
+    </div>
+    {% if not student %}<p class="text-muted">Username and initial password are generated automatically.</p>{% endif %}
+    <button class="btn btn-primary">{{ 'Save' if student else 'Create Student' }}</button>
+    <a class="btn btn-link" href="{{ url_for('admin.students') }}">Cancel</a>
+  </form>
+</div></div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}My Requests{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">My Requests</h1>
+<table class="table table-striped bg-white">
+  <thead><tr><th>#</th><th>Examination</th><th>Requested</th><th>Status</th><th>Decision date</th></tr></thead>
+  <tbody>
+  {% for r in reqs %}
+  <tr><td>{{ r.id }}</td><td>{{ r.exam.name }}</td>
+    <td>{{ r.request_date.strftime('%Y-%m-%d %H:%M') if r.request_date }}</td>
+    <td><span class="badge {{ {'Pending': 'bg-warning text-dark', 'Approved': 'bg-success', 'Rejected': 'bg-danger'}[r.status] }}">{{ r.status }}</span></td>
+    <td>{{ r.decision_date.strftime('%Y-%m-%d %H:%M') if r.decision_date }}</td></tr>
+  {% else %}<tr><td colspan="5" class="text-center text-muted">You have not submitted any requests.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

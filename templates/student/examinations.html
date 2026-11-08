@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{{ title }}</h1>
+<ul class="nav nav-pills mb-3">
+  {% for label, value in [('Available', 'available'), ('Completed', 'completed'), ('Not Completed', 'pending'), ('All', 'all')] %}
+  <li class="nav-item"><a class="nav-link {% if view == value %}active{% endif %}" href="{{ url_for('student.examinations', view=value) }}">{{ label }}</a></li>
+  {% endfor %}
+</ul>
+<form class="row g-2 mb-3" method="get">
+  <input type="hidden" name="view" value="{{ view }}">
+  <div class="col-md-3"><input class="form-control" name="q" value="{{ q }}" placeholder="Search by ID or name"></div>
+  <div class="col-md-3"><select class="form-select" name="course"><option value="">All courses</option>
+    {% for c in courses %}<option value="{{ c.code }}" {% if c.code == course %}selected{% endif %}>{{ c.code }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="type"><option value="">All types</option>
+    {% for t in types %}<option {% if t == etype %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  {% if view == 'all' %}
+  <div class="col-md-2"><select class="form-select" name="status"><option value="">Any status</option>
+    {% for s in ['Not Completed', 'Completed'] %}<option {% if s == status %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+  {% endif %}
+  <div class="col-auto"><button class="btn btn-outline-secondary">Filter</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Type</th><th>Duration</th><th>Marks</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exams %}
+  <tr><td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.course_code }}</td><td>{{ e.type }}</td><td>{{ e.duration }} min</td><td>{{ e.marks }}</td><td>{{ e.status }}</td>
+    <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('student.exam_details', exam_id=e.id) }}">Details</a></td></tr>
+  {% else %}<tr><td colspan="8" class="text-center text-muted">No examinations found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

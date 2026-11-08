@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Examinations{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h1 class="h3">Examinations</h1>
+  <a class="btn btn-primary" href="{{ url_for('admin.exam_add') }}">Create Examination</a></div>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-3"><input class="form-control" name="q" value="{{ q }}" placeholder="Search by ID or name"></div>
+  <div class="col-md-2"><select class="form-select" name="course"><option value="">All courses</option>
+    {% for c in courses %}<option value="{{ c.code }}" {% if c.code == course %}selected{% endif %}>{{ c.code }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="type"><option value="">All types</option>
+    {% for t in types %}<option {% if t == etype %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><select class="form-select" name="status"><option value="">Active (not removed)</option>
+    {% for s in ['Not Completed', 'Completed', 'Removed'] %}<option {% if s == status %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+  <div class="col-auto form-check pt-2"><input class="form-check-input" type="checkbox" name="unassigned" value="1" id="un" {% if unassigned %}checked{% endif %}>
+    <label class="form-check-label" for="un">No examiner</label></div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Filter</button></div>
+</form>
+<div class="table-responsive"><table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Type</th><th>Examiner</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exams %}
+  <tr><td>{{ e.id }}</td><td>{{ e.name }}</td><td>{{ e.course_code }}</td><td>{{ e.type }}</td>
+    <td>{{ e.examiner.name if e.examiner else 'Not assigned' }}</td><td>{{ e.status }}</td>
+    <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.exam_details', exam_id=e.id) }}">View</a></td></tr>
+  {% else %}<tr><td colspan="7" class="text-center text-muted">No examinations found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

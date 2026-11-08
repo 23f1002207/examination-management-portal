@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Examiners{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h1 class="h3">Examiners</h1>
+  <a class="btn btn-primary" href="{{ url_for('admin.examiner_add') }}">Add Examiner</a></div>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-auto"><input class="form-control" name="q" value="{{ q }}" placeholder="Search by ID or name"></div>
+  <div class="col-auto form-check pt-2"><input class="form-check-input" type="checkbox" name="all" value="1" id="all" {% if show_all %}checked{% endif %}>
+    <label class="form-check-label" for="all">Show inactive</label></div>
+  <div class="col-auto"><button class="btn btn-outline-secondary">Search</button></div>
+</form>
+<table class="table table-striped bg-white">
+  <thead><tr><th>ID</th><th>Username</th><th>Name</th><th>Department</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for e in examiners %}
+  <tr><td>{{ e.id }}</td><td>{{ e.user.username }}</td><td>{{ e.name }}</td><td>{{ e.department }}</td><td>{{ e.status }}</td>
+    <td>
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.examiner_details', examiner_id=e.id) }}">View</a>
+      <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.examiner_edit', examiner_id=e.id) }}">Edit</a>
+      {% if e.status == 'Active' %}
+      <form class="inline" method="post" action="{{ url_for('admin.examiner_status', examiner_id=e.id, action='deactivate') }}"><button class="btn btn-sm btn-outline-danger">Deactivate</button></form>
+      {% else %}
+      <form class="inline" method="post" action="{{ url_for('admin.examiner_status', examiner_id=e.id, action='activate') }}"><button class="btn btn-sm btn-outline-success">Activate</button></form>
+      {% endif %}
+    </td></tr>
+  {% else %}<tr><td colspan="6" class="text-center text-muted">No examiners found.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

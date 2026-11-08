@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Examination {{ exam.id }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-4"><div class="card-body">
+  <h1 class="h4">{{ exam.name }} <small class="text-muted">(ID {{ exam.id }})</small></h1>
+  <div class="row">
+    <div class="col-md-6">
+      <p><strong>Course:</strong> <a href="{{ url_for('admin.course_details', code=exam.course_code) }}">{{ exam.course_code }}</a> &ndash; {{ exam.course.name }}</p>
+      <p><strong>Type:</strong> {{ exam.type }}</p>
+      <p><strong>Duration:</strong> {{ exam.duration }} minutes</p>
+      <p><strong>Maximum marks:</strong> {{ exam.marks }}</p>
+      <p><strong>Status:</strong> {{ exam.status }}</p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Slot creation:</strong> {{ exam.slot_creation_start_date }} to {{ exam.slot_creation_end_date }}</p>
+      <p><strong>Slot booking:</strong> {{ exam.slot_booking_start_date }} to {{ exam.slot_booking_end_date }}</p>
+      <p><strong>Examiner:</strong>
+        {% if exam.examiner %}<a href="{{ url_for('admin.examiner_details', examiner_id=exam.examiner.id) }}">{{ exam.examiner.name }}</a> ({{ exam.examiner.user.username }})
+        {% else %}Not assigned{% endif %}</p>
+    </div>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('admin.exam_edit', exam_id=exam.id) }}">Edit</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('admin.exam_rubrics', exam_id=exam.id) }}">Manage Rubrics</a>
+  {% if exam.status == 'Not Completed' %}
+  <form class="inline" method="post" action="{{ url_for('admin.exam_complete', exam_id=exam.id) }}"><button class="btn btn-success">Mark Completed</button></form>
+  {% endif %}
+  {% if exam.status != 'Removed' %}
+  <form class="inline" method="post" action="{{ url_for('admin.exam_delete', exam_id=exam.id) }}"><button class="btn btn-outline-danger">Remove</button></form>
+  {% endif %}
+  <a class="btn btn-link" href="{{ url_for('admin.exams') }}">Back</a>
+</div></div>
+<h2 class="h5">Rubric criteria</h2>
+<table class="table bg-white">
+  <thead><tr><th>Criterion</th><th>Weightage %</th><th>Max marks</th></tr></thead>
+  <tbody>
+  {% for r in rubrics %}<tr><td>{{ r.name }}</td><td>{{ r.weightage }}</td><td>{{ r.max_marks }}</td></tr>
+  {% else %}<tr><td colspan="3" class="text-muted text-center">No rubric criteria yet.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ exam.name }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm"><div class="card-body">
+  <h1 class="h4">{{ exam.name }} <small class="text-muted">(ID {{ exam.id }})</small></h1>
+  <p><strong>Course:</strong> {{ exam.course_code }} &ndash; {{ exam.course.name }}</p>
+  <p><strong>Type:</strong> {{ exam.type }}</p>
+  <p><strong>Duration:</strong> {{ exam.duration }} minutes</p>
+  <p><strong>Maximum marks:</strong> {{ exam.marks }}</p>
+  <p><strong>Status:</strong> {{ exam.status }}</p>
+  <p><strong>Examiner:</strong> {{ exam.examiner.name if exam.examiner else 'Not assigned yet' }}</p>
+  <p><strong>Slot booking window:</strong> {{ exam.slot_booking_start_date }} to {{ exam.slot_booking_end_date }}</p>
+  <a class="btn btn-link" href="{{ url_for('student.examinations') }}">Back</a>
+</div></div>
+{% endblock %}
